@@ -17,14 +17,26 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         // inicializa valores e atualiza temperatura
-        natalCard = findViewById(R.id.natalCard);
-        natalTemp = findViewById(R.id.natalTemp);
-        natalTemp.setText(WeatherClient.getTemperature("Natal"));
-        // todo: atualização de temperaturas
+        inicializarViews();
+        atulizarValores();
 
         natalCard.setOnClickListener(v -> startActivity(
                 new Intent(MainActivity.this, detalhesClima.class)
         )); // todo: extra para Activity
+    }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        atulizarValores();
+    }
+
+    private void inicializarViews(){
+        natalCard = findViewById(R.id.natalCard);
+        natalTemp = findViewById(R.id.natalTemp);
+    }
+
+    public void atulizarValores(){
+        natalTemp.setText(WeatherClient.getTemperature("Natal"));
     }
 }
