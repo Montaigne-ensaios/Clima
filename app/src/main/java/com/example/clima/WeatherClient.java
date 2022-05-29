@@ -37,6 +37,9 @@ public class WeatherClient extends AsyncTask<String, Integer, String> {
 
     @Override
     protected String doInBackground(String... strings) {
+        /*
+        cria a requisição, executa assincronamente e retorna o valor tratado
+         */
         cidade = strings[0];
         String link = buildAPIRequest(cidade);
         String json = request(link);
@@ -46,6 +49,8 @@ public class WeatherClient extends AsyncTask<String, Integer, String> {
     @Override
     protected void onPostExecute(String s) {
         super.onPostExecute(s);
+        // passa a cidade e a temperatura (`s`) para o writeTemperatures
+        // decidir para onde vai cada valor
         mainActivity.writeTemperatures(cidade, s);
     }
 
@@ -134,6 +139,9 @@ public class WeatherClient extends AsyncTask<String, Integer, String> {
     }
 
     public static void getTemperature(MainActivity mainActivity){
+        /*
+        instancia o objeto e executa para cada cidade da lista
+         */
         WeatherClient instance = new WeatherClient(mainActivity);
         for (String cidade: coordenadas.keySet()) {
             instance.execute(cidade);
