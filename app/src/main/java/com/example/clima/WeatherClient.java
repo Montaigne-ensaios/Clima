@@ -32,8 +32,8 @@ public class WeatherClient {
     }};
 
     public static String request(String link){
-        /**
-         * Função de requisição http por url, retorna resposta crua
+        /*
+          Função de requisição http por url, retorna resposta crua
          */
 
         AsyncTask.execute(() -> {
@@ -71,8 +71,8 @@ public class WeatherClient {
     }
 
     public static String buildAPIRequest(String cidade){
-        /**
-         *  Função de construir link de requisição pelos requistos da API
+        /*
+           Função de construir link de requisição pelos requistos da API
          */
         return "https://api.open-meteo.com/v1/forecast" +
                 "?latitude=" +
@@ -84,19 +84,19 @@ public class WeatherClient {
     }
 
     public static String getTemperature(String cidade) {
-        /**
-         *  Função que faz a requisição, trata o JSON e retorna a temperatura
-         *
-         *  Estrutura da resposta:
-         *  ...
-         *  daily:
-         *      temperature_2m_max:
-         *          temp dia0
-         *          temp dia1
-         *          temp dia2
-         *          ...
-         *      ...
-         *  ...
+        /*
+           Função que faz a requisição, trata o JSON e retorna a temperatura
+
+           Estrutura da resposta:
+           ...
+           daily:
+               temperature_2m_max:
+                   temp dia0
+                   temp dia1
+                   temp dia2
+                   ...
+               ...
+           ...
          */
         try {
             // recupera resposta JSON da API
