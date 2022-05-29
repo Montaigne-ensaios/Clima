@@ -18,55 +18,72 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Objects;
 
-public class WeatherClient {
-    private static volatile String response = "";
-    // volatil para passar entre threads
-    private static final int dia = Calendar.getInstance().get(Calendar.DAY_OF_WEEK);
+public class WeatherClient extends AsyncTask<String, Integer, String> {
+    private final int dia = Calendar.getInstance().get(Calendar.DAY_OF_WEEK);
     // coordenadas das cidades listadas
-
     private static final HashMap<String, double[]> coordenadas = new HashMap<String, double[]>() {{
         put("Natal", new double[]{-5.79, -35.34});
         put("Helsinki", new double[]{60.17, 24.94});
         put("Nova Iorque", new double[]{40.72, -73.99});
         put("Nova Delhi", new double[]{28.52,77.06});
     }};
+    private final MainActivity mainActivity;
+    private String cidade;
+
+    public WeatherClient(MainActivity mainActivity) {
+        super();
+        this.mainActivity = mainActivity;
+    }
+
+    @Override
+    protected String doInBackground(String... strings) {
+        cidade = strings[0];
+        String link = buildAPIRequest(cidade);
+        String json = request(link);
+        return readJSON(json);
+    }
+
+    @Override
+    protected void onPostExecute(String s) {
+        super.onPostExecute(s);
+        mainActivity.writeTemperatures(cidade, s);
+    }
 
     public static String request(String link){
         /*
           Função de requisição http por url, retorna resposta crua
          */
-
-        AsyncTask.execute(() -> {
-            // Android requer que funções de rede sejam executadas sem
-            // bloquear thread principal
+        String response = null;
+        try {
+            URL url = new URL(link);
+            HttpURLConnection urlConnection = null;
             try {
-                URL url = new URL(link);
-                HttpURLConnection urlConnection = null;
-                try {
-                    urlConnection = (HttpURLConnection) url.openConnection();
+                urlConnection = (HttpURLConnection) url.openConnection();
 
-                    StringBuffer buffer = new StringBuffer();
-                    InputStream is = urlConnection.getInputStream();
-                    BufferedReader br = new BufferedReader(new InputStreamReader(is));
+                StringBuffer buffer = new StringBuffer();
+                InputStream is = urlConnection.getInputStream();
+                BufferedReader br = new BufferedReader(new InputStreamReader(is));
 
-                    String line = null;
-                    while ((line = br.readLine()) != null)
-                        // monta resposta da input stream
-                        buffer.append(line);
-                    is.close();
-                    // passa valor obtido como variável volatil
-                    response = buffer.toString();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                } finally {
-                    if (urlConnection != null) {
-                        urlConnection.disconnect();
-                    }
-                }
-            } catch (MalformedURLException e) {
+                String line = null;
+                while ((line = br.readLine()) != null)
+                    // monta resposta da input stream
+                    buffer.append(line);
+                is.close();
+                // passa valor obtido para fora da Thread como variável
+                // todo: ver se isto está causando clique duplo
+                // talvez seja melhor esta thread chamar um método de retorno
+                // usando runOnUIThread()
+                response = buffer.toString();
+            } catch (IOException e) {
                 e.printStackTrace();
+            } finally {
+                if (urlConnection != null) {
+                    urlConnection.disconnect();
+                }
             }
-        });
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        }
         return response;
     }
 
@@ -83,7 +100,7 @@ public class WeatherClient {
                 "&timezone=America%2FSao_Paulo";
     }
 
-    public static String getTemperature(String cidade) {
+    public String readJSON(String json) {
         /*
            Função que faz a requisição, trata o JSON e retorna a temperatura
 
@@ -99,8 +116,6 @@ public class WeatherClient {
            ...
          */
         try {
-            // recupera resposta JSON da API
-            String json = WeatherClient.request(buildAPIRequest(cidade));
             // JSONObject funciona como dicionário
             JSONObject clima = new JSONObject(json);
             for (Iterator<String> it = clima.keys(); it.hasNext(); ) {
@@ -116,5 +131,12 @@ public class WeatherClient {
         } catch (JSONException ignored){}
         return null;
         // todo: toast para problemas na requisição, Toasts podem requerir contexto
+    }
+
+    public static void getTemperature(MainActivity mainActivity){
+        WeatherClient instance = new WeatherClient(mainActivity);
+        for (String cidade: coordenadas.keySet()) {
+            instance.execute(cidade);
+        }
     }
 }
