@@ -7,32 +7,24 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.widget.TextView;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.util.Calendar;
-import java.util.Iterator;
-
 public class MainActivity extends AppCompatActivity {
     private CardView natalCard;
-    private TextView textView;
-    private final int dia = Calendar.getInstance().get(Calendar.DAY_OF_WEEK);
-
-    private final String url="https://api.open-meteo.com/v1/forecast?latitude=-5.79&longitude=-35.34&daily=temperature_2m_max&timezone=America%2FSao_Paulo";
+    private TextView natalTemp;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        // inicializa valores e atualiza temperatura
         natalCard = findViewById(R.id.natalCard);
-        textView = findViewById(R.id.natalNome);
-        textView.setText(WeatherClient.getTemperature("Natal"));
+        natalTemp = findViewById(R.id.natalTemp);
+        natalTemp.setText(WeatherClient.getTemperature("Natal"));
+        // todo: atualização de temperaturas
 
         natalCard.setOnClickListener(v -> startActivity(
                 new Intent(MainActivity.this, detalhesClima.class)
-        ));
+        )); // todo: extra para Activity
 
     }
 }
