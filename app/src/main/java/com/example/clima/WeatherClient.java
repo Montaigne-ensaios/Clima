@@ -74,10 +74,6 @@ public class WeatherClient extends AsyncTask<String, Integer, String> {
                     // monta resposta da input stream
                     buffer.append(line);
                 is.close();
-                // passa valor obtido para fora da Thread como variável
-                // todo: ver se isto está causando clique duplo
-                // talvez seja melhor esta thread chamar um método de retorno
-                // usando runOnUIThread()
                 response = buffer.toString();
             } catch (IOException e) {
                 e.printStackTrace();
