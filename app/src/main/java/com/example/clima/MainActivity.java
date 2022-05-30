@@ -32,7 +32,10 @@ public class MainActivity extends AppCompatActivity {
         // 0: textView do nome
         // 1: textView da temperatura
         cards = new CardView[]{
-                findViewById(R.id.natalCard)
+                findViewById(R.id.natalCard),
+                findViewById(R.id.helsinkiCard),
+                findViewById(R.id.novaioroqueCard),
+                findViewById(R.id.delhiCard),
         };
 
         for (CardView card: cards) {
