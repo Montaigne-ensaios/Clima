@@ -142,8 +142,8 @@ public class WeatherClient extends AsyncTask<String, Integer, String> {
         /*
         instancia o objeto e executa para cada cidade da lista
          */
-        WeatherClient instance = new WeatherClient(mainActivity);
         for (String cidade: coordenadas.keySet()) {
+            WeatherClient instance = new WeatherClient(mainActivity);
             instance.execute(cidade);
         }
     }

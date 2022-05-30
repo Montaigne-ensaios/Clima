@@ -2,6 +2,7 @@ package com.example.clima;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
+import androidx.constraintlayout.widget.ConstraintLayout;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -15,9 +16,8 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        // inicializa valores e atualiza temperatura
+        // inicializa valores
         initializeViews();
-        updateValues();
     }
 
     @Override
@@ -28,7 +28,9 @@ public class MainActivity extends AppCompatActivity {
 
     private void initializeViews(){
         // inicaliza cards numa lista, os TextViews ficam
-        // acessíveis pelo getChild(index) sendo os índices
+        // acessíveis pelo getChildAt(index) do ConstraintLayout,
+        // que por sua vez é acessível pelo getChildAt(0) do
+        // ConstraintLayout. Os valroes de index são:
         // 0: textView do nome
         // 1: textView da temperatura
         cards = new CardView[]{
@@ -40,15 +42,16 @@ public class MainActivity extends AppCompatActivity {
 
         for (CardView card: cards) {
             card.setOnClickListener(v -> {
+                // updateValues()
                 // pondo valroes extras na intent (cidade e temperatura)
                 Intent intent = new Intent(MainActivity.this, detalhesClima.class);
-                TextView nomeView = (TextView) card.getChildAt(0);
-                TextView tempView = (TextView) card.getChildAt(1);
+                ConstraintLayout layout = (ConstraintLayout) card.getChildAt(0);
+                TextView nomeView = (TextView) layout.getChildAt(0);
+                TextView tempView = (TextView) layout.getChildAt(1);
                 intent.putExtra("cidade", nomeView.getText());
                 intent.putExtra("temperatura", tempView.getText());
                 startActivity(intent);
             });
-            // todo: extra para Activity
         }
     }
 
@@ -58,9 +61,11 @@ public class MainActivity extends AppCompatActivity {
 
     public void writeTemperatures(String cidade, String temp){
         for (CardView card: cards) {
-            TextView cidadeView = (TextView) card.getChildAt(0);
+            TextView cidadeView = (TextView) ((ConstraintLayout) card.getChildAt(0))
+                    .getChildAt(0);
             if(cidadeView.getText().equals(cidade)){
-                TextView tempView = (TextView) card.getChildAt(1);
+                TextView tempView = (TextView) ((ConstraintLayout) card.getChildAt(0))
+                        .getChildAt(1);
                 tempView.setText(temp + "°C");
             }
         }
