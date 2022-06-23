@@ -6,6 +6,7 @@ import androidx.core.content.ContextCompat;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.TextView;
 
 public class DetalhesClimaActivity extends AppCompatActivity {
@@ -21,7 +22,7 @@ public class DetalhesClimaActivity extends AppCompatActivity {
         String temperatura = originIntent.getStringExtra("temperatura");
 
         ConstraintLayout fundo = findViewById(R.id.constraintLayout);
-        int temp = Integer.parseInt(temperatura.replace("°C", ""));
+        float temp = Float.parseFloat(temperatura.replace("°C", ""));
         if(temp > 40){
             fundo.setBackgroundColor(ContextCompat.getColor(this, R.color.muito_quente));
         } else if (temp > 30){
