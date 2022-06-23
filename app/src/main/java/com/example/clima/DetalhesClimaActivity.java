@@ -6,8 +6,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.widget.TextView;
 
-public class detalhesClima extends AppCompatActivity {
-    String cidade, temperatura;
+public class DetalhesClimaActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -16,8 +15,8 @@ public class detalhesClima extends AppCompatActivity {
 
         // recuperando valores da Intent
         Intent originIntent = getIntent();
-        cidade = originIntent.getStringExtra("cidade");
-        temperatura = originIntent.getStringExtra("temperatura");
+        String cidade = originIntent.getStringExtra("cidade");
+        String temperatura = originIntent.getStringExtra("temperatura");
 
         // atribui os valores às views
         TextView cidadeView = findViewById(R.id.cidade);
