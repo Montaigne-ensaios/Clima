@@ -44,7 +44,7 @@ public class MainActivity extends AppCompatActivity {
             card.setOnClickListener(v -> {
                 // updateValues()
                 // pondo valroes extras na intent (cidade e temperatura)
-                Intent intent = new Intent(MainActivity.this, detalhesClima.class);
+                Intent intent = new Intent(MainActivity.this, DetalhesClimaActivity.class);
                 ConstraintLayout layout = (ConstraintLayout) card.getChildAt(0);
                 TextView nomeView = (TextView) layout.getChildAt(0);
                 TextView tempView = (TextView) layout.getChildAt(1);
