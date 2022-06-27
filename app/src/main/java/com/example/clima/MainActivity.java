@@ -8,13 +8,22 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.widget.TextView;
 
+import java.util.HashMap;
+
 public class MainActivity extends AppCompatActivity {
-    private CardView[] cards;
+    private Cidade[] cidades;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        cidades = new Cidade[]{
+            new Cidade("Natal", new double[]{-5.79, -35.34}, findViewById(R.id.natalTemp)),
+            new Cidade("Helsinki", new double[]{60.17, 24.94}, findViewById(R.id.helsinkiTemp)),
+            new Cidade("Nova Iorque", new double[]{40.72, -73.99}, findViewById(R.id.novaioroqueTemp)),
+            new Cidade("Nova Delhi", new double[]{28.52,77.06}, findViewById(R.id.delhiTemp))
+        };
 
         // inicializa valores
         initializeViews();
@@ -33,7 +42,7 @@ public class MainActivity extends AppCompatActivity {
         // ConstraintLayout. Os valroes de index são:
         // 0: textView do nome
         // 1: textView da temperatura
-        cards = new CardView[]{
+        CardView[] cards = new CardView[]{
                 findViewById(R.id.natalCard),
                 findViewById(R.id.helsinkiCard),
                 findViewById(R.id.novaioroqueCard),
@@ -55,19 +64,9 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    public void updateValues(){
-        WeatherClient.getTemperature( this);
-    }
-
-    public void writeTemperatures(String cidade, String temp){
-        for (CardView card: cards) {
-            TextView cidadeView = (TextView) ((ConstraintLayout) card.getChildAt(0))
-                    .getChildAt(0);
-            if(cidadeView.getText().equals(cidade)){
-                TextView tempView = (TextView) ((ConstraintLayout) card.getChildAt(0))
-                        .getChildAt(1);
-                tempView.setText(temp + "°C");
-            }
+    private void updateValues(){
+        for (Cidade cidade: cidades) {
+            WeatherClient.getTemperature(cidade);
         }
     }
 }

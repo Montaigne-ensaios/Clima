@@ -1,6 +1,10 @@
 package com.example.clima;
 
 import android.os.AsyncTask;
+import android.widget.TextView;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.cardview.widget.CardView;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -20,28 +24,19 @@ import java.util.Objects;
 
 public class WeatherClient extends AsyncTask<String, Integer, String> {
     private final int dia = Calendar.getInstance().get(Calendar.DAY_OF_WEEK);
-    // coordenadas das cidades listadas
-    private static final HashMap<String, double[]> coordenadas = new HashMap<String, double[]>() {{
-        put("Natal", new double[]{-5.79, -35.34});
-        put("Helsinki", new double[]{60.17, 24.94});
-        put("Nova Iorque", new double[]{40.72, -73.99});
-        put("Nova Delhi", new double[]{28.52,77.06});
-    }};
-    private final MainActivity mainActivity;
-    private String cidade;
+    private Cidade cidade;
 
-    public WeatherClient(MainActivity mainActivity) {
+    public WeatherClient(Cidade cidade) {
         super();
-        this.mainActivity = mainActivity;
+        this.cidade = cidade;
     }
 
     @Override
-    protected String doInBackground(String... strings) {
+    protected String doInBackground(String... string) {  // parâmetro obrigatório
         /*
         cria a requisição, executa assincronamente e retorna o valor tratado
          */
-        cidade = strings[0];
-        String link = buildAPIRequest(cidade);
+        String link = buildAPIRequest(this.cidade);
         String json = request(link);
         return readJSON(json);
     }
@@ -51,7 +46,7 @@ public class WeatherClient extends AsyncTask<String, Integer, String> {
         super.onPostExecute(s);
         // passa a cidade e a temperatura (`s`) para o writeTemperatures
         // decidir para onde vai cada valor
-        mainActivity.writeTemperatures(cidade, s);
+        cidade.updateTemp(s);
     }
 
     public static String request(String link){
@@ -65,7 +60,7 @@ public class WeatherClient extends AsyncTask<String, Integer, String> {
             try {
                 urlConnection = (HttpURLConnection) url.openConnection();
 
-                StringBuffer buffer = new StringBuffer();
+                StringBuilder buffer = new StringBuilder();
                 InputStream is = urlConnection.getInputStream();
                 BufferedReader br = new BufferedReader(new InputStreamReader(is));
 
@@ -88,15 +83,15 @@ public class WeatherClient extends AsyncTask<String, Integer, String> {
         return response;
     }
 
-    public static String buildAPIRequest(String cidade){
+    public static String buildAPIRequest(Cidade cidade){
         /*
            Função de construir link de requisição pelos requistos da API
          */
         return "https://api.open-meteo.com/v1/forecast" +
                 "?latitude=" +
-                Objects.requireNonNull(coordenadas.get(cidade))[0] +
+                cidade.getLat() +
                 "&longitude=" +
-                Objects.requireNonNull(coordenadas.get(cidade))[1] +
+                cidade.getLong() +
                 "&daily=temperature_2m_max" +
                 "&timezone=America%2FSao_Paulo";
     }
@@ -122,8 +117,7 @@ public class WeatherClient extends AsyncTask<String, Integer, String> {
             for (Iterator<String> it = clima.keys(); it.hasNext(); ) {
                 // é necessário iterar por todas as linhas da string
                 String key = it.next();
-                boolean teste = key.equals("daily"); // todo: revisar isso aqui
-                if (teste) {
+                if (key.equals("daily")) {
                     JSONObject daily = (JSONObject) clima.get(key);
                     JSONArray temperatureSemana = daily.getJSONArray("temperature_2m_max");
                     return temperatureSemana.get(dia).toString();
@@ -134,13 +128,11 @@ public class WeatherClient extends AsyncTask<String, Integer, String> {
         // todo: toast para problemas na requisição, Toasts podem requerir contexto
     }
 
-    public static void getTemperature(MainActivity mainActivity){
+    public static void getTemperature(Cidade cidade){
         /*
-        instancia o objeto e executa para cada cidade da lista
+        instancia o objeto e executa para a cidade passada
          */
-        for (String cidade: coordenadas.keySet()) {
-            WeatherClient instance = new WeatherClient(mainActivity);
-            instance.execute(cidade);
-        }
+        WeatherClient instance = new WeatherClient(cidade);
+        instance.execute();
     }
 }
