@@ -13,6 +13,7 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.net.UnknownHostException;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -122,14 +123,15 @@ public class WeatherClient extends AsyncTask<String, Integer, String> {
             for (Iterator<String> it = clima.keys(); it.hasNext(); ) {
                 // é necessário iterar por todas as linhas da string
                 String key = it.next();
-                boolean teste = key.equals("daily"); // todo: revisar isso aqui
-                if (teste) {
+                if (key.equals("daily")) {
                     JSONObject daily = (JSONObject) clima.get(key);
                     JSONArray temperatureSemana = daily.getJSONArray("temperature_2m_max");
                     return temperatureSemana.get(dia).toString();
                 }
             }
-        } catch (JSONException ignored){}
+        } catch (JSONException | NullPointerException e){
+            e.printStackTrace();
+        }
         return null;
         // todo: toast para problemas na requisição, Toasts podem requerir contexto
     }
