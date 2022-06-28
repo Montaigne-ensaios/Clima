@@ -3,6 +3,8 @@ package com.example.clima;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -25,43 +27,20 @@ public class MainActivity extends AppCompatActivity {
             new Cidade("Nova Delhi", new double[]{28.52,77.06})
         };
 
-        // inicializa valores
-        initializeViews();
+        CidadesAdapter adapter = new CidadesAdapter();
+        adapter.setCidades(cidades);
+
+        RecyclerView recyclerView = findViewById(R.id.recycler);
+        recyclerView.setAdapter(adapter);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+
+        updateValues();
     }
 
     @Override
     protected void onResume() {
         super.onResume();
         updateValues();
-    }
-
-    private void initializeViews(){
-        // inicaliza cards numa lista, os TextViews ficam
-        // acessíveis pelo getChildAt(index) do ConstraintLayout,
-        // que por sua vez é acessível pelo getChildAt(0) do
-        // ConstraintLayout. Os valroes de index são:
-        // 0: textView do nome
-        // 1: textView da temperatura
-        CardView[] cards = new CardView[]{
-                findViewById(R.id.natalCard),
-                findViewById(R.id.helsinkiCard),
-                findViewById(R.id.novaioroqueCard),
-                findViewById(R.id.delhiCard),
-        };
-
-        for (CardView card: cards) {
-            card.setOnClickListener(v -> {
-                // updateValues()
-                // pondo valroes extras na intent (cidade e temperatura)
-                Intent intent = new Intent(MainActivity.this, DetalhesClimaActivity.class);
-                ConstraintLayout layout = (ConstraintLayout) card.getChildAt(0);
-                TextView nomeView = (TextView) layout.getChildAt(0);
-                TextView tempView = (TextView) layout.getChildAt(1);
-                intent.putExtra("cidade", nomeView.getText());
-                intent.putExtra("temperatura", tempView.getText());
-                startActivity(intent);
-            });
-        }
     }
 
     private void updateValues(){

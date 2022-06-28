@@ -1,5 +1,7 @@
 package com.example.clima;
 
+import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -7,6 +9,7 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
 public class CidadesAdapter extends RecyclerView.Adapter<CidadesAdapter.ViewHolder> {
@@ -26,6 +29,14 @@ public class CidadesAdapter extends RecyclerView.Adapter<CidadesAdapter.ViewHold
          // define o tempView da cidade de acordo com o holder
 
         holder.textNome.setText(cidades[position].getNome());
+
+        holder.card.setOnClickListener(v -> {
+            Context context = holder.card.getContext();
+            Intent intent = new Intent(context, DetalhesClimaActivity.class);
+            intent.putExtra("cidade", holder.textNome.getText());
+            intent.putExtra("temperatura", holder.textTemp.getText());
+            context.startActivity(intent);
+        });
     }
 
     @Override
