@@ -5,11 +5,14 @@ import android.widget.TextView;
 public class Cidade {
     private final String nome;
     private final double[] coordenadas;
-    private final TextView tempView;
+    private TextView tempView;
 
-    public Cidade(String nome, double[] coordenadas, TextView tempView) {
+    public Cidade(String nome, double[] coordenadas) {
         this.nome = nome;
         this.coordenadas = coordenadas;
+    }
+
+    public void setTempView(TextView tempView) {
         this.tempView = tempView;
     }
 

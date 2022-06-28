@@ -19,10 +19,10 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         cidades = new Cidade[]{
-            new Cidade("Natal", new double[]{-5.79, -35.34}, findViewById(R.id.natalTemp)),
-            new Cidade("Helsinki", new double[]{60.17, 24.94}, findViewById(R.id.helsinkiTemp)),
-            new Cidade("Nova Iorque", new double[]{40.72, -73.99}, findViewById(R.id.novaioroqueTemp)),
-            new Cidade("Nova Delhi", new double[]{28.52,77.06}, findViewById(R.id.delhiTemp))
+            new Cidade("Natal", new double[]{-5.79, -35.34}),
+            new Cidade("Helsinki", new double[]{60.17, 24.94}),
+            new Cidade("Nova Iorque", new double[]{40.72, -73.99}),
+            new Cidade("Nova Delhi", new double[]{28.52,77.06})
         };
 
         // inicializa valores
