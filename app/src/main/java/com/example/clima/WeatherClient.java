@@ -123,7 +123,9 @@ public class WeatherClient extends AsyncTask<String, Integer, String> {
                     return temperatureSemana.get(dia).toString();
                 }
             }
-        } catch (JSONException ignored){}
+        } catch (JSONException | NullPointerException e) {
+            e.printStackTrace();
+        }
         return null;
         // todo: toast para problemas na requisição, Toasts podem requerir contexto
     }
