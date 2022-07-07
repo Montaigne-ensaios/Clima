@@ -24,7 +24,7 @@ public class MainActivity extends AppCompatActivity {
             new Cidade("Natal", new double[]{-5.79, -35.34}),
             new Cidade("Helsinki", new double[]{60.17, 24.94}),
             new Cidade("Nova Iorque", new double[]{40.72, -73.99}),
-            new Cidade("Nova Delhi", new double[]{28.52,77.06})
+            new Cidade("Nova Delhi", new double[]{28.52,77.06}), new Cidade("Cidade do Cabo",new double[]{-33.9249,18.4241})
         };
 
         CidadesAdapter adapter = new CidadesAdapter();
